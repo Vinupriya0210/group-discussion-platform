@@ -1,4 +1,5 @@
-const API_KEY = "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"
+import { generateText } from "ai"
+
 const API_URL = "https://openrouter.ai/api/v1/chat/completions"
 const MODEL = "qwen/qwen-2.5-7b-instruct"
 
@@ -10,25 +11,12 @@ async function callAI(prompt: string, systemPrompt?: string, temperature = 0.8):
   messages.push({ role: "user", content: prompt })
 
   try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        messages,
-        temperature,
-      }),
+    const { text } = await generateText({
+      model: "openai/gpt-4o-mini", // Using AI Gateway with no API key needed
+      messages,
+      temperature,
     })
-
-    if (response.ok) {
-      const data = await response.json()
-      return data.choices[0].message.content
-    } else {
-      return "I understand the topic. Let me share my perspective."
-    }
+    return text
   } catch (error) {
     console.error("[v0] AI API error:", error)
     return "I understand the topic. Let me share my perspective."
