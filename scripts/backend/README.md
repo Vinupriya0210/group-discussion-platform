@@ -3,14 +3,14 @@
 ## Setup
 
 1. Install dependencies:
-```bash
+\`\`\`bash
 pip install -r requirements.txt
-```
+\`\`\`
 
 2. Run the server:
-```bash
+\`\`\`bash
 python main.py
-```
+\`\`\`
 
 Server runs on `http://localhost:8000`
 

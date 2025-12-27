@@ -47,37 +47,37 @@ A comprehensive college-wide, placement-focused AI Group Discussion (GD) simulat
 ### Frontend Setup
 
 1. Install dependencies:
-```bash
+\`\`\`bash
 npm install
 # or
 pnpm install
-```
+\`\`\`
 
 2. Run the development server:
-```bash
+\`\`\`bash
 npm run dev
 # or
 pnpm dev
-```
+\`\`\`
 
 Frontend runs on `http://localhost:3000`
 
 ### Backend Setup
 
 1. Navigate to backend directory:
-```bash
+\`\`\`bash
 cd scripts/backend
-```
+\`\`\`
 
 2. Install Python dependencies:
-```bash
+\`\`\`bash
 pip install -r requirements.txt
-```
+\`\`\`
 
 3. Run the FastAPI server:
-```bash
+\`\`\`bash
 python main.py
-```
+\`\`\`
 
 Backend API runs on `http://localhost:8000`
 
@@ -86,15 +86,15 @@ Backend API runs on `http://localhost:8000`
 You need to run both frontend and backend simultaneously:
 
 **Terminal 1** (Frontend):
-```bash
+\`\`\`bash
 npm run dev
-```
+\`\`\`
 
 **Terminal 2** (Backend):
-```bash
+\`\`\`bash
 cd scripts/backend
 python main.py
-```
+\`\`\`
 
 Then open `http://localhost:3000` in your browser.
 
@@ -133,35 +133,35 @@ Each participant is scored (1-10) on:
 
 ### Change Discussion Duration
 Edit `components/gd-room.tsx`:
-```tsx
+\`\`\`tsx
 // Auto-inject at X minutes (default: 5 minutes = 300 seconds)
 if (elapsedSeconds >= 300 && !injectedAt5Min && started) {
-```
+\`\`\`
 
 ### Change Candidate Injection Rules
 Edit `scripts/backend/main.py` in `/api/session/{session_id}/inject-candidates`:
-```python
+\`\`\`python
 if human_count == 1:
     engine.add_ai_candidate()
     engine.add_ai_candidate()
 # Modify as needed
-```
+\`\`\`
 
 ### Change AI Model
 Edit `scripts/backend/ai_agents.py`:
-```python
+\`\`\`python
 MODEL = "qwen/qwen-2.5-7b-instruct"  # Change to any OpenRouter model
-```
+\`\`\`
 
 ### Custom Color Scheme
 Edit `app/globals.css`:
-```css
+\`\`\`css
 :root {
   --bg-main: #f2f6f0;
   --green-primary: #0f2c1f;
   /* Modify colors as needed */
 }
-```
+\`\`\`
 
 ## Browser Compatibility
 
@@ -171,9 +171,9 @@ Edit `app/globals.css`:
 ## Deployment
 
 ### Frontend (Vercel)
-```bash
+\`\`\`bash
 vercel deploy
-```
+\`\`\`
 
 ### Backend (Any Python hosting)
 - Railway
@@ -184,13 +184,13 @@ vercel deploy
 **Important**: Update the API URL in frontend components after deploying backend.
 
 In `components/gd-room.tsx` and `app/page.tsx`, replace:
-```tsx
+\`\`\`tsx
 fetch("http://localhost:8000/api/...") 
-```
+\`\`\`
 with your deployed backend URL:
-```tsx
+\`\`\`tsx
 fetch("https://your-backend-url.com/api/...")
-```
+\`\`\`
 
 ## Troubleshooting
 
