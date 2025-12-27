@@ -1,5 +1,3 @@
-import { generateText } from "ai"
-
 const API_URL = "https://openrouter.ai/api/v1/chat/completions"
 const MODEL = "qwen/qwen-2.5-7b-instruct"
 
@@ -11,12 +9,28 @@ async function callAI(prompt: string, systemPrompt?: string, temperature = 0.8):
   messages.push({ role: "user", content: prompt })
 
   try {
-    const { text } = await generateText({
-      model: "openai/gpt-4o-mini", // Using AI Gateway with no API key needed
-      messages,
-      temperature,
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY || "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"}`,
+        "HTTP-Referer": process.env.NEXT_PUBLIC_SITE_URL || "https://v0.dev",
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages,
+        temperature,
+      }),
     })
-    return text
+
+    if (!response.ok) {
+      const error = await response.text()
+      console.error("[v0] OpenRouter API error:", error)
+      throw new Error(`API request failed: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return data.choices[0].message.content
   } catch (error) {
     console.error("[v0] AI API error:", error)
     return "I understand the topic. Let me share my perspective."
@@ -93,6 +107,37 @@ Generate a response (2-4 sentences) that:
 - Occasionally builds on or politely disagrees with others
 
 Keep it natural and conversational. DO NOT be overly formal.`
+
+  const response = await callAI(prompt, undefined, 0.9)
+  return response.trim()
+}
+
+export async function generateAICandidateResponse(
+  candidateName: string,
+  topic: string,
+  recentMessages: any[],
+): Promise<string> {
+  const personality = personalities[Math.floor(Math.random() * personalities.length)]
+
+  const contextStr = recentMessages.map((msg) => `${msg.participant}: ${msg.message}`).join("\n")
+
+  const prompt = `You are ${candidateName}, a candidate in a corporate Group Discussion for campus placements.
+
+Topic: ${topic}
+
+Recent discussion:
+${contextStr || "Discussion has just started."}
+
+Your personality: ${personality}
+
+Generate your response (2-4 sentences) that:
+- Relates to the topic and ongoing discussion
+- Presents a clear viewpoint or adds new perspective
+- Uses professional yet conversational language
+- Shows critical thinking
+- Occasionally agrees/disagrees with previous points
+
+Keep it natural. DO NOT just repeat what others said.`
 
   const response = await callAI(prompt, undefined, 0.9)
   return response.trim()

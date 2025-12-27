@@ -107,3 +107,7 @@ export class GDEngine {
 
 // In-memory storage for sessions
 export const sessions = new Map<string, GDEngine>()
+
+export function getGDEngine(sessionId: string): GDEngine | undefined {
+  return sessions.get(sessionId)
+}
